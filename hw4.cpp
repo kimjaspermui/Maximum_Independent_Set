@@ -16,16 +16,15 @@
 using namespace std;
 
 typedef pair<int, int> degreeIndexPair;
-const double MAX = 100;
-int n = 0;
+const double MAX = 10;
 
-int countNodes(int indepSet[n]) {
+int countNodes(vector<int>* indepSet) {
 
   int count = 0;
 
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < indepSet->size(); i++) {
 
-    if (indepSet[i] == 1) {
+    if ((*indepSet)[i] == 1) {
 
       count++;
     }
@@ -105,7 +104,7 @@ void populateSet(vector<vector<int>>* myGraph, set<degreeIndexPair>* mySet) {
 }
 
 void populateIndepSet(vector<vector<int>>* myGraph, set<degreeIndexPair>* mySet,
-int indepSet[n]) {
+vector<int>* indepSet) {
 
   for (auto myPair : *mySet) {
 
@@ -115,7 +114,7 @@ int indepSet[n]) {
 
     for (int i = 0; i < myVector.size(); i++) {
 
-      if (myVector[i] == 1 && indepSet[i] == 1) {
+      if (myVector[i] == 1 && (*indepSet)[i] == 1) {
 
         fail = true;
         break;
@@ -124,8 +123,18 @@ int indepSet[n]) {
 
     if (!fail) {
 
-      indepSet[rowIndex] = 1;
+      (*indepSet)[rowIndex] = 1;
     }
+  }
+}
+
+void initIndepSet(vector<int>* indepSet, int n) {
+
+  indepSet->clear();
+
+  for (int i = 0; i < n; i++) {
+
+    indepSet->push_back(0);
   }
 }
 
@@ -141,30 +150,36 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  n = stoi(argv[1]);
+  int n = stoi(argv[1]);
 
   vector<vector<int>> myGraph;
-  int indepSet[n];
-  memset(indepSet, 0, n * sizeof(int) );
+  vector<int> indepSet;
   set<degreeIndexPair> mySet;
 
   double sum = 0;
 
-  for (int i = 0; i < MAX; i++) {
+  for (int j = 1; j <= n; j++) {
 
-    myGraph.clear();
-    mySet.clear();
-    memset(indepSet, 0, n * sizeof(int) );
+    sum = 0;
 
-    populateGraph(&myGraph, n);
-    // printGraph(&myGraph);
-    populateSet(&myGraph, &mySet);
-    populateIndepSet(&myGraph, &mySet, indepSet);
+    for (int i = 0; i < MAX; i++) {
 
-    // cout << "Size of Independent Set: " << countNodes(indepSet) << endl;
-    sum += countNodes(indepSet);
+      myGraph.clear();
+      mySet.clear();
+      initIndepSet(&indepSet, j);
+
+      populateGraph(&myGraph, j);
+      // printGraph(&myGraph);
+      populateSet(&myGraph, &mySet);
+      populateIndepSet(&myGraph, &mySet, &indepSet);
+
+      // cout << "Size of Independent Set: " << countNodes(&indepSet) << endl;
+      sum += countNodes(&indepSet);
+    }
+
+    // cout << "Average Independent Set of size " << j << " is: " << sum / MAX
+    // << endl;
+
+    cout << sum / MAX << endl;
   }
-
-  cout << "Average Independent Set of size " << n << " is: " << sum / MAX
-  << endl;
 }
