@@ -1,0 +1,7 @@
+hw4.cpp running instructions:
+
+To compile:
+    make
+
+To run:
+    ./hw4 n <-- n represents the size of the random graph to be generated
