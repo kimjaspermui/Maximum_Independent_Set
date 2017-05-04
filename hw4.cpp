@@ -16,7 +16,23 @@
 using namespace std;
 
 typedef pair<int, int> degreeIndexPair;
+const double MAX = 100;
 int n = 0;
+
+int countNodes(int indepSet[n]) {
+
+  int count = 0;
+
+  for (int i = 0; i < n; i++) {
+
+    if (indepSet[i] == 1) {
+
+      count++;
+    }
+  }
+
+  return count;
+}
 
 int countOnes(vector<int>* myVector) {
 
@@ -132,15 +148,23 @@ int main(int argc, char* argv[]) {
   memset(indepSet, 0, n * sizeof(int) );
   set<degreeIndexPair> mySet;
 
-  // for loop
-  populateGraph(&myGraph, n);
-  printGraph(&myGraph);
-  populateSet(&myGraph, &mySet);
+  double sum = 0;
 
-  populateIndepSet(&myGraph, &mySet, indepSet);
+  for (int i = 0; i < MAX; i++) {
 
-  for (int i = 0; i < n; i++) {
+    myGraph.clear();
+    mySet.clear();
+    memset(indepSet, 0, n * sizeof(int) );
 
-    cout << indepSet[i] << endl;
+    populateGraph(&myGraph, n);
+    // printGraph(&myGraph);
+    populateSet(&myGraph, &mySet);
+    populateIndepSet(&myGraph, &mySet, indepSet);
+
+    // cout << "Size of Independent Set: " << countNodes(indepSet) << endl;
+    sum += countNodes(indepSet);
   }
+
+  cout << "Average Independent Set of size " << n << " is: " << sum / MAX
+  << endl;
 }
