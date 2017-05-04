@@ -8,10 +8,8 @@
 
 #include <iostream>
 #include <vector>
-#include <math.h>
 #include <random>
 #include <set>
-#include "util.h"
 
 using namespace std;
 
