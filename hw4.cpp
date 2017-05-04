@@ -10,9 +10,27 @@
 #include <vector>
 #include <math.h>
 #include <random>
+#include <set>
 #include "util.h"
 
 using namespace std;
+
+typedef pair<int, int> degreeIndexPair;
+
+int countOnes(vector<int>* myVector) {
+
+  int count = 0;
+
+  for (int i = 0; i < myVector->size(); i++) {
+
+    if ((*myVector)[i] == 1) {
+
+      count++;
+    }
+  }
+
+  return count;
+}
 
 void printGraph(vector<vector<int>>* myGraph) {
 
@@ -61,6 +79,14 @@ void populateGraph(vector<vector<int>>* myGraph, int size) {
   }
 }
 
+void populateSet(vector<vector<int>>* myGraph, set<degreeIndexPair>* mySet) {
+
+  for (int i = 0; i < myGraph->size(); i++) {
+
+    mySet->insert({countOnes(&(*myGraph)[i]), i});
+  }
+}
+
 int main(int argc, char* argv[]) {
 
   // check arguments number
@@ -78,12 +104,15 @@ int main(int argc, char* argv[]) {
   vector<vector<int>> myGraph;
   int indepSet[n];
   memset(indepSet, 0, n * sizeof(int) );
-
-  for (int i = 0; i < n; i++) {
-
-    cout << indepSet[i] << endl;
-  }
+  set<degreeIndexPair> mySet;
 
   populateGraph(&myGraph, n);
+  printGraph(&myGraph);
+  populateSet(&myGraph, &mySet);
+
+  for (auto myPair : mySet) {
+
+    cout << myPair.first << " " << myPair.second << endl;
+  }
 
 }
