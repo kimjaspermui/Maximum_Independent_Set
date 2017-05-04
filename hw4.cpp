@@ -16,6 +16,7 @@
 using namespace std;
 
 typedef pair<int, int> degreeIndexPair;
+int n = 0;
 
 int countOnes(vector<int>* myVector) {
 
@@ -87,6 +88,31 @@ void populateSet(vector<vector<int>>* myGraph, set<degreeIndexPair>* mySet) {
   }
 }
 
+void populateIndepSet(vector<vector<int>>* myGraph, set<degreeIndexPair>* mySet,
+int indepSet[n]) {
+
+  for (auto myPair : *mySet) {
+
+    int rowIndex = myPair.second;
+    vector<int> myVector = (*myGraph)[rowIndex];
+    bool fail = false;
+
+    for (int i = 0; i < myVector.size(); i++) {
+
+      if (myVector[i] == 1 && indepSet[i] == 1) {
+
+        fail = true;
+        break;
+      }
+    }
+
+    if (!fail) {
+
+      indepSet[rowIndex] = 1;
+    }
+  }
+}
+
 int main(int argc, char* argv[]) {
 
   // check arguments number
@@ -99,20 +125,22 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  int n = stoi(argv[1]);
+  n = stoi(argv[1]);
 
   vector<vector<int>> myGraph;
   int indepSet[n];
   memset(indepSet, 0, n * sizeof(int) );
   set<degreeIndexPair> mySet;
 
+  // for loop
   populateGraph(&myGraph, n);
   printGraph(&myGraph);
   populateSet(&myGraph, &mySet);
 
-  for (auto myPair : mySet) {
+  populateIndepSet(&myGraph, &mySet, indepSet);
 
-    cout << myPair.first << " " << myPair.second << endl;
+  for (int i = 0; i < n; i++) {
+
+    cout << indepSet[i] << endl;
   }
-
 }
